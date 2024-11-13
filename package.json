@@ -1,0 +1,37 @@
+{
+  "name": "aws-sdk-js",
+  "version": "1.0.0",
+  "description": "Getting started from aws sdk doc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LukaChazarretaCoronel/AWS-SDK-JS.git"
+  },
+  "keywords": [
+    "AWS",
+    "SDK"
+  ],
+  "author": "Luka Chazarreta Coronel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LukaChazarretaCoronel/AWS-SDK-JS/issues"
+  },
+  "homepage": "https://github.com/LukaChazarretaCoronel/AWS-SDK-JS#readme",
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.682.0",
+    "@aws-sdk/client-dynamodb": "^3.665.0",
+    "@aws-sdk/client-ec2": "^3.666.0",
+    "@aws-sdk/client-rds": "^3.665.0",
+    "@aws-sdk/client-s3": "^3.668.0",
+    "@aws-sdk/client-sns": "^3.682.0",
+    "@aws-sdk/client-sqs": "^3.668.0",
+    "aws-sdk": "^2.1691.0",
+    "dotenv": "^16.4.5",
+    "pg": "^8.13.0",
+    "react-scripts": "^5.0.1",
+    "uuid": "^10.0.0"
+  }
+}
