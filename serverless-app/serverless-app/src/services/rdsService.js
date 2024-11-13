@@ -7,7 +7,7 @@ const createDBInstance = async (dbInstanceIdentifier, dbInstanceClass ) => {
     DBInstanceClass: "db.t3.micro", // Clase actualizada
     Engine: "postgres", // Motor actualizado
     MasterUsername: "Luka",
-    MasterUserPassword: "CopaAmerica2021",
+    MasterUserPassword: "",
     AllocatedStorage: 20, // Almacenamiento actualizado
     DBSubnetGroupName: "my-db-subnet-group",
     EngineVersion: "13.11", // Versión del motor actualizada

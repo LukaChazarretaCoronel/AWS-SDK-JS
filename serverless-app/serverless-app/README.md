@@ -1,24 +1,31 @@
-# AWS SDK JavaScript Project
+# AWS Serverless Application
 
-Este proyecto es un ejemplo que utiliza el **AWS SDK v3** para interactuar con servicios como **S3**, **SQS** y **RDS**. Utilizamos **AWS Lambda** para procesar los eventos y **AWS SAM** para gestionar la infraestructura como código.
+This is a serverless application built using AWS SAM, Node.js, and AWS SDK v3. It handles interactions between S3, SQS, and RDS, using various AWS Lambda functions.
 
-## Estructura del Proyecto
-├── /src # Código fuente │ ├── /services # Servicios AWS (S3, SQS, RDS) │ ├── /handlers # Funciones Lambda ├── /tests # Pruebas unitarias ├── /template.yaml # Configuración AWS SAM ├── package.json # Dependencias del proyecto └── README.md # Documentación
-## Requisitos
+## Project Structure
 
-- Node.js (versión 14 o superior)
-- AWS CLI
-- AWS SAM CLI
+- **auth_handler.js**: Lambda function to handle authentication.
+- **dbHandler.js**: Handles RDS instance creation, deletion, and listing.
+- **s3ToSQSHandler.js**: Processes S3 events and sends messages to SQS.
+- **rdsService.js**: Service to manage RDS operations using AWS SDK.
+- **s3Service.js**: Service for uploading and retrieving files from S3.
+- **sqsService.js**: Service for sending, receiving, and deleting messages in SQS.
+- **template.yaml**: AWS SAM template for defining the serverless resources.
 
-## Instalación
+## Environment Variables
 
-1. Clona este repositorio.
-2. Ejecuta `npm install` para instalar las dependencias.
-3. Configura tus credenciales de AWS.
+Ensure that you set the following environment variables for the application to function correctly:
 
-## Despliegue
+- **SQS_QUEUE_URL**: The URL of your SQS queue.
+- **S3_BUCKET_NAME**: The name of your S3 bucket.
 
-Para desplegar el proyecto en AWS, utiliza el siguiente comando:
+## Usage
 
-```bash
-sam deploy --guided
+- **Upload a File to S3**: Use `uploadFile.js` to upload a file to S3.
+- **Send and Receive SQS Messages**: Use `sendManualMessage.js` and `receiveMessages.js`.
+- **Manage RDS Instances**: Use API endpoints to create, delete, or describe RDS instances.
+
+## License
+
+This project is licensed under the MIT License.
+
