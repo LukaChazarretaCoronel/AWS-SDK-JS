@@ -1,0 +1,23 @@
+{
+  "name": "aws-sdk-js-project",
+  "version": "1.0.0",
+  "description": "Proyecto de ejemplo para interactuar con S3, SQS y RDS usando AWS SDK en JavaScript",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "deploy": "sam deploy --guided"
+  },
+  "dependencies": {
+    "@aws-sdk/client-rds": "^3.54.1",
+    "@aws-sdk/client-s3": "^3.54.1",
+    "@aws-sdk/client-sqs": "^3.54.1",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
+  },
+  "author": "Luka Chazarreta",
+  "license": "MIT"
+}

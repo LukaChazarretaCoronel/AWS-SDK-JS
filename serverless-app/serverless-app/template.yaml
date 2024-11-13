@@ -1,0 +1,121 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM Template para Lambda S3 -> SQS
+
+Resources:
+  s3ToSqsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler/s3ToSQSHandler.s3ToSQSHandler
+      Runtime: nodejs18.x
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          SQS_QUEUE_URL: !Ref SqsQueue
+      Events:
+        SEUploadEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref S3Bucket
+            Events: s3:ObjectCreated:*
+
+  DbHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler/dbHandler.dbHandler
+      Runtime: nodejs18.x
+      MemorySize: 512
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          REGION: us-east-2
+      Events:
+        CreateDbInstance:
+          Type: Api
+          Properties:
+            Path: /rds
+            Method: POST
+            RestApiId: !Ref RdsApi
+        DeleteDbInstance:
+          Type: Api
+          Properties:
+            Path: /rds/{dbInstanceIdentifier}
+            Method: DELETE
+            RestApiId: !Ref RdsApi
+        GetDbInstance:
+          Type: Api
+          Properties:
+            Path: /rds/{dbInstanceIdentifier}
+            Method: GET
+            RestApiId: !Ref RdsApi
+        ListDbInstances:
+          Type: Api
+          Properties:
+            Path: /rds
+            Method: GET
+            RestApiId: !Ref RdsApi
+
+  RdsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'POST, GET, DELETE, OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+      GatewayResponses:
+        DEFAULT_4XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              Access-Control-Allow-Methods: "'POST, GET, DELETE, OPTIONS'"
+        DEFAULT_5XX:
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              Access-Control-Allow-Methods: "'POST, GET, DELETE, OPTIONS'"
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain  # To protect the resource
+
+  SqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 30
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonRDSFullAccess
+      Policies:
+        - PolicyName: LambdaS3SQSPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                  - sqs:SendMessage
+                Resource: "*"
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for RDS management"
+    Value: !Sub "https://${RdsApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
